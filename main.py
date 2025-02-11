@@ -2,6 +2,13 @@ from fastapi import FastAPI
 from fastapi.params import Body
 import classes
 
+from database import engine
+from model import Base
+
+Base.metadata.create_all(bind=engine)
+print("Tabelas criadas com sucesso!")
+
+
 app = FastAPI()
 
     
