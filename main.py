@@ -14,7 +14,7 @@ app = FastAPI()
     
 @app.get ("/")
 def read_root():
-    return {"Hello": "lalalalalalaala"}
+    return {"Hello": "lalalalalala"}
 
 @app.post("/criar")
 def criar_valores(nova_mensagem: classes.Mensagem):
