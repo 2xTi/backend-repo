@@ -5,7 +5,7 @@ user = "postgres"
 password = "tiagoreis123"
 database = "database_tigas"
 host = "localhost"
-
+    
 SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@{host}/{database}"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 

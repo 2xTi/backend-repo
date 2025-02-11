@@ -30,3 +30,7 @@ def criar_valores(res: dict = Body(...)):
 def criar_valores(res: dict = Body(...)):
     print(res)
     return {"Mensagem": f"lala: {res['lala']} lele: {res['lele']}"}
+
+@app.get("/quadrado/{num}")
+def square(num: int):
+ return num ** 2
