@@ -33,4 +33,4 @@ def criar_valores(res: dict = Body(...)):
 
 @app.get("/quadrado/{num}")
 def square(num: int):
- return num ** 2
+ return num ** 3
