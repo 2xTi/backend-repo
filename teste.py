@@ -12,4 +12,4 @@ def teste_quadrado():
     num = 4
     response = client.get(f"/quadrado/{num}")
     assert response.status_code == 200
-    assert response.json() == num ** 2  # mudei pra ver se da erro na terceira ação
+    assert response.json() == num ** 2
