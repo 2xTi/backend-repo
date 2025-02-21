@@ -1,27 +1,34 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import declarative_base
-from dotenv import load_dotenv
 import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+from dotenv import load_dotenv
 
-# Carregar as variáveis do .env
+# Carregar variáveis do .env
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Ler variáveis de ambiente com fallback
+user = os.getenv("DB_USER", "default_user")
+password = os.getenv("DB_PASSWORD", "default_password")
+database = os.getenv("DB_NAME", "default_db")
+host = os.getenv("DB_HOST", "localhost")  # Default para localhost
 
-if not DATABASE_URL:
-    user = os.getenv("DB_USER")
-    password = os.getenv("DB_PASSWORD")
-    database = os.getenv("DB_NAME")
-    host = os.getenv("DB_HOST", "localhost")
-    DATABASE_URL = f"postgresql://{user}:{password}@{host}:5432/{database}"
+# Debug: Exibir variáveis para verificar o carregamento correto
+print(f"DB_USER={user}")
+print(f"DB_PASSWORD={'*' * len(password) if password else None}")
+print(f"DB_NAME={database}")
+print(f"DB_HOST={host}")
 
+# Verificar se as variáveis foram carregadas corretamente
+if not all([user, password, database, host]):
+    raise ValueError("Variáveis de ambiente não foram carregadas corretamente.")
+
+# Construir a URL de conexão
 SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@{host}/{database}"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 
+# Criar engine
+engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
-
 
 def get_db():
     db = SessionLocal()
@@ -30,11 +37,9 @@ def get_db():
     finally:
         db.close()
 
-
+# Teste de conexão
 try:
     with engine.connect() as conn:
         print("Conexão bem-sucedida!")
 except Exception as e:
     print(f"Erro ao conectar ao banco: {e}")
-
-
