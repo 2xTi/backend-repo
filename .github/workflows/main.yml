@@ -38,6 +38,6 @@ jobs:
 
       - name: Executar pytest
         env:
-          DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}
+          DATABASE_URL: postgresql://user:password@localhost/database_tigas
         run: pytest teste.py
 
