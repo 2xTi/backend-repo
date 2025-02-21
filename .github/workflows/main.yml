@@ -20,11 +20,11 @@ jobs:
           - 5432:5432
 
     env:
-      DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@localhost:5432/${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
-      DB_HOST: postgres
+      DB_HOST: postgres  # ✅ Nome do serviço PostgreSQL
+      DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}
 
     steps:
       - name: Clonar repositório
@@ -41,13 +41,28 @@ jobs:
       - name: Instalar dependências
         run: pip install -r requirements.txt
 
+      - name: Verificar variáveis de ambiente
+        run: |
+          echo "DB_USER=$DB_USER"
+          echo "DB_PASSWORD=$DB_PASSWORD"
+          echo "DB_NAME=$DB_NAME"
+          echo "DB_HOST=$DB_HOST"
+          echo "DATABASE_URL=$DATABASE_URL"
+
       - name: Listar containers ativos
         run: docker ps
 
       - name: Verificar logs do PostgreSQL
         run: docker logs $(docker ps -q --filter "ancestor=postgres:13")
 
+      - name: Esperar o PostgreSQL estar pronto
+        run: |
+          echo "Verificando conexão ao PostgreSQL no host 'postgres' e porta 5432"
+          until pg_isready -h postgres -p 5432 -U $DB_USER; do
+            echo "Esperando o PostgreSQL iniciar..."
+            sleep 2
+          done
+          echo "PostgreSQL está pronto!"
+
       - name: Executar pytest
-        env:
-          DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}
         run: pytest teste.py
