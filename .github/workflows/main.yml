@@ -20,7 +20,7 @@ jobs:
           - 5432:5432
 
     env:
-      DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@localhost:5432/${{ secrets.DB_NAME }}
+      DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
@@ -40,6 +40,20 @@ jobs:
 
       - name: Instalar dependências
         run: pip install -r requirements.txt
+
+      - name: Instalar cliente PostgreSQL
+        run: sudo apt-get install postgresql-client
+
+      - name: Aguardar o PostgreSQL iniciar
+        run: sleep 10
+
+      - name: Verificar conexão com o PostgreSQL
+        run: |
+          until pg_isready -h postgres -p 5432 -U ${{ secrets.DB_USER }}
+          do
+            echo "Aguardando PostgreSQL..."
+            sleep 2
+          done
 
       - name: Listar containers ativos
         run: docker ps
