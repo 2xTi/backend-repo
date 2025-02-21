@@ -7,10 +7,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Ler variáveis de ambiente com fallback
-user = os.getenv("DB_USER", "default_user")
-password = os.getenv("DB_PASSWORD", "default_password")
-database = os.getenv("DB_NAME", "default_db")
-host = os.getenv("DB_HOST", "postgres")  # ✅ Fallback para o nome do serviço
+user = "postgres"
+password = "tiagoreis123"
+database = "database_tigas"
+host = "localhost"
 
 # Debug: Verificar variáveis carregadas
 print(f"DB_USER={user}")
