@@ -9,13 +9,16 @@ from model import Base
 from database import engine
 import model
 from fastapi.middleware.cors import CORSMiddleware
-
-
+import requests
+from bs4 import BeautifulSoup
+from datetime import datetime
+from database import engine
+from database import get_db
+from scraping import scraping_ufu
 import classes
 
-Base.metadata.create_all(bind=engine)
-print("Tabelas criadas com sucesso!")
 
+model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -66,3 +69,7 @@ def square(num: int):
 async def buscar_valores(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
     mensagens = db.query(model.Model_Mensagem).offset(skip).limit(limit).all()
     return mensagens
+
+@app.get("/scraping", status_code=status.HTTP_201_CREATED)
+def executar_scrape(db: Session = Depends(get_db)):
+    return scraping_ufu(db)
