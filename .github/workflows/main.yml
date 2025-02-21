@@ -58,6 +58,7 @@ jobs:
           done
           echo "PostgreSQL está pronto!"
 
+
       - name: Verificar DATABASE_URL
         run: echo "DATABASE_URL=$DATABASE_URL"
 
