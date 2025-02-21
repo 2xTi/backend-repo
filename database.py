@@ -10,17 +10,13 @@ load_dotenv()
 user = os.getenv("DB_USER", "default_user")
 password = os.getenv("DB_PASSWORD", "default_password")
 database = os.getenv("DB_NAME", "default_db")
-host = os.getenv("DB_HOST", "localhost")  # Default para localhost
+host = os.getenv("DB_HOST", "postgres")  # ✅ Fallback para o nome do serviço
 
-# Debug: Exibir variáveis para verificar o carregamento correto
+# Debug: Verificar variáveis carregadas
 print(f"DB_USER={user}")
 print(f"DB_PASSWORD={'*' * len(password) if password else None}")
 print(f"DB_NAME={database}")
 print(f"DB_HOST={host}")
-
-# Verificar se as variáveis foram carregadas corretamente
-if not all([user, password, database, host]):
-    raise ValueError("Variáveis de ambiente não foram carregadas corretamente.")
 
 # Construir a URL de conexão
 SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@{host}/{database}"
@@ -37,7 +33,7 @@ def get_db():
     finally:
         db.close()
 
-# Teste de conexão
+# Testar conexão
 try:
     with engine.connect() as conn:
         print("Conexão bem-sucedida!")
