@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from dotenv import load_dotenv
 import os
 
@@ -32,4 +32,5 @@ try:
         print("Conexão bem-sucedida!")
 except Exception as e:
     print(f"Erro ao conectar ao banco: {e}")
+
 
