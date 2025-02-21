@@ -40,6 +40,15 @@ jobs:
       - name: Instalar dependências
         run: pip install -r requirements.txt
 
+      - name: Verificar variáveis de ambiente
+        run: |
+          echo "DATABASE_URL=$DATABASE_URL"
+          echo "DB_USER=$DB_USER"
+          echo "DB_PASSWORD=$DB_PASSWORD"
+          echo "DB_NAME=$DB_NAME"
+          echo "DB_HOST=$DB_HOST"
+
+
       - name: Esperar o PostgreSQL estar pronto
         run: |
           until pg_isready -h postgres -p 5432; do
