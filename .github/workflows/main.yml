@@ -47,14 +47,5 @@ jobs:
       - name: Verificar logs do PostgreSQL
         run: docker logs $(docker ps -q --filter "ancestor=postgres:13")
 
-      - name: Esperar o PostgreSQL estar pronto (com debug)
-        run: |
-          echo "Verificando conexão ao PostgreSQL no host 'postgres' e porta 5432"
-          until pg_isready -h postgres -p 5432 -U $DB_USER; do
-            echo "Esperando o PostgreSQL iniciar..."
-            sleep 2
-          done
-          echo "PostgreSQL está pronto!"
-
       - name: Executar pytest
         run: pytest teste.py
