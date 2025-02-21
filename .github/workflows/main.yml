@@ -41,11 +41,20 @@ jobs:
       - name: Instalar dependências
         run: pip install -r requirements.txt
 
-      - name: Aguardar o PostgreSQL iniciar
-        run: sleep 10
+      - name: Instalar cliente PostgreSQL
+        run: sudo apt-get install postgresql-client
 
-      - name: Listar containers ativos
-        run: docker ps
+      - name: Esperar o PostgreSQL iniciar
+        run: |
+          for i in {1..10}; do
+            if pg_isready -h postgres -p 5432 -U ${{ secrets.DB_USER }}; then
+              echo "PostgreSQL está pronto!"
+              break
+            else
+              echo "Aguardando PostgreSQL..."
+              sleep 5
+            fi
+          done
 
       - name: Verificar logs do PostgreSQL
         run: docker logs $(docker ps -q --filter "ancestor=postgres:13")
